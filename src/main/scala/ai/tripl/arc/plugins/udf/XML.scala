@@ -22,7 +22,7 @@ import com.sun.xml.txw2.output.IndentingXMLStreamWriter
 
 class XML extends ai.tripl.arc.plugins.UDFPlugin {
 
-  val version = Utils.getFrameworkVersion
+  val version = ai.tripl.arc.xml.BuildInfo.version
 
   // one udf plugin can register multiple user defined functions
   override def register()(implicit spark: SparkSession, logger: Logger, arcContext: ARCContext) = {
