@@ -20,4 +20,3 @@ services:
       - ${PWD}:/app  
       - /tmp/pgp:/pgp
     working_dir: /app
-
