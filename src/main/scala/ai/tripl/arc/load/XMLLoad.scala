@@ -28,9 +28,22 @@ import ai.tripl.arc.util.SerializableConfiguration
 import com.databricks.spark.xml.util._
 import com.sun.xml.txw2.output.IndentingXMLStreamWriter
 
-class XMLLoad extends PipelineStagePlugin {
+class XMLLoad extends PipelineStagePlugin with JupyterCompleter {
 
   val version = ai.tripl.arc.xml.BuildInfo.version
+
+  val snippet = """{
+    |  "type": "XMLLoad",
+    |  "name": "XMLLoad",
+    |  "environments": [
+    |    "production",
+    |    "test"
+    |  ],
+    |  "inputView": "inputView",
+    |  "outputURI": "hdfs://*.xml"
+    |}""".stripMargin
+
+  val documentationURI = new java.net.URI(s"${baseURI}/load/#xmlload")
 
   def instantiate(index: Int, config: com.typesafe.config.Config)(implicit spark: SparkSession, logger: ai.tripl.arc.util.log.logger.Logger, arcContext: ARCContext): Either[List[ai.tripl.arc.config.Error.StageError], PipelineStage] = {
     import ai.tripl.arc.config.ConfigReader._
@@ -231,7 +244,7 @@ case class XMLLoadStage(
     prefix: String,
     singleFileNumPartitions: Int,
     params: Map[String, String]
-  ) extends PipelineStage {
+  ) extends LoadPipelineStage {
 
   override def execute()(implicit spark: SparkSession, logger: ai.tripl.arc.util.log.logger.Logger, arcContext: ARCContext): Option[DataFrame] = {
     XMLLoadStage.execute(this)
