@@ -28,9 +28,22 @@ import javax.xml.validation.Schema
 import javax.xml.validation.SchemaFactory
 import javax.xml.validation.Validator
 
-class XMLExtract extends PipelineStagePlugin {
+class XMLExtract extends PipelineStagePlugin with JupyterCompleter {
 
   val version = ai.tripl.arc.xml.BuildInfo.version
+
+  val snippet = """{
+    |  "type": "XMLExtract",
+    |  "name": "XMLExtract",
+    |  "environments": [
+    |    "production",
+    |    "test"
+    |  ],
+    |  "inputURI": "hdfs://*.xml",
+    |  "outputView": "outputView"
+    |}""".stripMargin
+
+  val documentationURI = new java.net.URI(s"${baseURI}/extract/#xmlextract")
 
   def instantiate(index: Int, config: com.typesafe.config.Config)(implicit spark: SparkSession, logger: ai.tripl.arc.util.log.logger.Logger, arcContext: ARCContext): Either[List[ai.tripl.arc.config.Error.StageError], PipelineStage] = {
     import ai.tripl.arc.config.ConfigReader._
@@ -130,7 +143,7 @@ case class XMLExtractStage(
     partitionBy: List[String],
     contiguousIndex: Boolean,
     xsd: Option[String]
-  ) extends PipelineStage {
+  ) extends ExtractPipelineStage {
 
   override def execute()(implicit spark: SparkSession, logger: ai.tripl.arc.util.log.logger.Logger, arcContext: ARCContext): Option[DataFrame] = {
     XMLExtractStage.execute(this)
