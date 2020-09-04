@@ -17,7 +17,7 @@ object Dependencies {
   val sparkAvro = "org.apache.spark" %% "spark-avro" % sparkVersion % "provided"
 
   // spark XML
-  val sparkXML = "com.databricks" %% "spark-xml" % "0.10.0"
+  val sparkXML = "com.databricks" %% "spark-xml" % "0.9.0"
 
   // Project
   val etlDeps = Seq(
