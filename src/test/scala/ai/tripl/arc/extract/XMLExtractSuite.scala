@@ -252,26 +252,21 @@ class XMLExtractSuite extends FunSuite with BeforeAndAfter {
         |      } ]
         |    },
         |    "nullable" : true,
-        |    "metadata" : {
-        |      "nullable" : true,
-        |      "internal" : false,
-        |      "description" : "testrow",
-        |      "primaryKey" : true,
-        |      "id" : "",
-        |      "position" : 1
-        |    }
+        |    "metadata" : { }
         |  }, {
         |    "name" : "_filename",
         |    "type" : "string",
         |    "nullable" : false,
         |    "metadata" : {
+        |      "description" : "An Arc internal field describing where this row was originally sourced from.",
         |      "internal" : true
         |    }
         |  }, {
         |    "name" : "_index",
-        |    "type" : "integer",
-        |    "nullable" : true,
+        |    "type" : "long",
+        |    "nullable" : false,
         |    "metadata" : {
+        |      "description" : "An Arc internal field describing where in _filename this row was originally sourced from.",
         |      "internal" : true
         |    }
         |  } ]
@@ -359,6 +354,7 @@ class XMLExtractSuite extends FunSuite with BeforeAndAfter {
     extract.XMLExtractStage.execute(
       extract.XMLExtractStage(
         plugin=new extract.XMLExtract,
+        id=None,
         name=outputView,
         description=None,
         schema=Right(Nil),
@@ -380,6 +376,7 @@ class XMLExtractSuite extends FunSuite with BeforeAndAfter {
     extract.XMLExtractStage.execute(
       extract.XMLExtractStage(
         plugin=new extract.XMLExtract,
+        id=None,
         name=outputView,
         description=None,
         schema=Right(Nil),
@@ -423,6 +420,7 @@ class XMLExtractSuite extends FunSuite with BeforeAndAfter {
       extract.XMLExtractStage.execute(
         extract.XMLExtractStage(
           plugin=new extract.XMLExtract,
+          id=None,
           name=outputView,
           description=None,
           schema=Right(Nil),
@@ -446,6 +444,7 @@ class XMLExtractSuite extends FunSuite with BeforeAndAfter {
       extract.XMLExtractStage.execute(
         extract.XMLExtractStage(
           plugin=new extract.XMLExtract,
+         id=None,
           name=outputView,
           description=None,
           schema=Right(Nil),
@@ -468,6 +467,7 @@ class XMLExtractSuite extends FunSuite with BeforeAndAfter {
     val dataset = extract.XMLExtractStage.execute(
       extract.XMLExtractStage(
         plugin=new extract.XMLExtract,
+        id=None,
         name=outputView,
         description=None,
         schema=Right(schema),

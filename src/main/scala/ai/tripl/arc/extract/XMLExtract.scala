@@ -50,7 +50,8 @@ class XMLExtract extends PipelineStagePlugin with JupyterCompleter {
     import ai.tripl.arc.config.ConfigUtils._
     implicit val c = config
 
-    val expectedKeys = "type" :: "name" :: "description" :: "environments" :: "inputURI" :: "inputView" :: "inputField" :: "outputView" :: "authentication" :: "contiguousIndex" :: "numPartitions" :: "partitionBy" :: "persist" :: "schemaURI" :: "schemaView" :: "params" :: "xsdURI" :: Nil
+    val expectedKeys = "type" :: "id" :: "name" :: "description" :: "environments" :: "inputURI" :: "inputView" :: "inputField" :: "outputView" :: "authentication" :: "contiguousIndex" :: "numPartitions" :: "partitionBy" :: "persist" :: "schemaURI" :: "schemaView" :: "params" :: "xsdURI" :: Nil
+    val id = getOptionalValue[String]("id")
     val name = getValue[String]("name")
     val description = getOptionalValue[String]("description")
     val inputView = if(c.hasPath("inputView")) getValue[String]("inputView") else Right("")
@@ -62,21 +63,22 @@ class XMLExtract extends PipelineStagePlugin with JupyterCompleter {
     val numPartitions = getOptionalValue[Int]("numPartitions")
     val partitionBy = getValue[StringList]("partitionBy", default = Some(Nil))
     val contiguousIndex = getValue[java.lang.Boolean]("contiguousIndex", default = Some(true))
-    val extractColumns = if(c.hasPath("schemaURI")) getValue[String]("schemaURI") |> parseURI("schemaURI") _ |> getExtractColumns("schemaURI", authentication) _ else Right(List.empty)
+    val extractColumns = if(c.hasPath("schemaURI")) getValue[String]("schemaURI") |> parseURI("schemaURI") _ |> textContentForURI("schemaURI", authentication) |> getExtractColumns("schemaURI") _ else Right(List.empty)
     val schemaView = if(c.hasPath("schemaView")) getValue[String]("schemaView") else Right("")
     val xsdURI = if(c.hasPath("xsdURI")) getValue[String]("xsdURI") else Right("")
     val xsd = if(c.hasPath("xsdURI")) xsdURI |> parseURI("xsdURI") _ |> textContentForURI("xsdURI", authentication) _ |> validateXSD("xsdURI") _ else Right("")
     val params = readMap("params", c)
     val invalidKeys = checkValidKeys(c)(expectedKeys)
 
-    (name, description, extractColumns, schemaView, inputView, parsedGlob, inputField, outputView, persist, numPartitions, authentication, contiguousIndex, partitionBy, xsdURI, xsd, invalidKeys) match {
-      case (Right(name), Right(description), Right(extractColumns), Right(schemaView), Right(inputView), Right(parsedGlob), Right(inputField), Right(outputView), Right(persist), Right(numPartitions), Right(authentication), Right(contiguousIndex), Right(partitionBy), Right(xsdURI), Right(xsd), Right(invalidKeys)) =>
+    (id, name, description, extractColumns, schemaView, inputView, parsedGlob, inputField, outputView, persist, numPartitions, authentication, contiguousIndex, partitionBy, xsdURI, xsd, invalidKeys) match {
+      case (Right(id), Right(name), Right(description), Right(extractColumns), Right(schemaView), Right(inputView), Right(parsedGlob), Right(inputField), Right(outputView), Right(persist), Right(numPartitions), Right(authentication), Right(contiguousIndex), Right(partitionBy), Right(xsdURI), Right(xsd), Right(invalidKeys)) =>
         val input = if(c.hasPath("inputView")) Left(inputView) else Right(parsedGlob)
         val schema = if(c.hasPath("schemaView")) Left(schemaView) else Right(extractColumns)
         val xsdOption = if(c.hasPath("xsdURI")) Option(xsd) else None
 
         val stage = XMLExtractStage(
           plugin=this,
+          id=id,
           name=name,
           description=description,
           schema=schema,
@@ -106,7 +108,7 @@ class XMLExtract extends PipelineStagePlugin with JupyterCompleter {
 
         Right(stage)
       case _ =>
-        val allErrors: Errors = List(name, description, extractColumns, schemaView, inputView, parsedGlob, inputField, outputView, persist, numPartitions, authentication, contiguousIndex, partitionBy, xsdURI, xsd, invalidKeys).collect{ case Left(errs) => errs }.flatten
+        val allErrors: Errors = List(id, name, description, extractColumns, schemaView, inputView, parsedGlob, inputField, outputView, persist, numPartitions, authentication, contiguousIndex, partitionBy, xsdURI, xsd, invalidKeys).collect{ case Left(errs) => errs }.flatten
         val stageName = stringOrDefault(name, "unnamed stage")
         val err = StageError(index, stageName, c.origin.lineNumber, allErrors)
         Left(err :: Nil)
@@ -130,6 +132,7 @@ class XMLExtract extends PipelineStagePlugin with JupyterCompleter {
 
 case class XMLExtractStage(
     plugin: XMLExtract,
+    id: Option[String],
     name: String,
     description: Option[String],
     schema: Either[String, List[ExtractColumn]],

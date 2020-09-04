@@ -73,6 +73,7 @@ class XMLLoadSuite extends FunSuite with BeforeAndAfter {
     load.XMLLoadStage.execute(
       load.XMLLoadStage(
         plugin=new load.XMLLoad,
+        id=None,
         name=outputView,
         description=None,
         inputView=outputView,
@@ -109,6 +110,7 @@ class XMLLoadSuite extends FunSuite with BeforeAndAfter {
     load.XMLLoadStage.execute(
       load.XMLLoadStage(
         plugin=new load.XMLLoad,
+        id=None,
         name=outputView,
         description=None,
         inputView=outputView,
