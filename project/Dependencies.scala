@@ -8,7 +8,7 @@ object Dependencies {
   val scalaTest = "org.scalatest" %% "scalatest" % "3.0.7" % "test,it"
 
   // arc
-  val arc = "ai.tripl" %% "arc" % "3.1.0" % "provided"
+  val arc = "ai.tripl" %% "arc" % "3.2.0" % "provided"
   val typesafeConfig = "com.typesafe" % "config" % "1.3.1" intransitive()
 
   // spark
@@ -17,7 +17,7 @@ object Dependencies {
   val sparkAvro = "org.apache.spark" %% "spark-avro" % sparkVersion % "provided"
 
   // spark XML
-  val sparkXML = "com.databricks" %% "spark-xml" % "0.9.0"
+  val sparkXML = "com.databricks" %% "spark-xml" % "0.10.0"
 
   // Project
   val etlDeps = Seq(
