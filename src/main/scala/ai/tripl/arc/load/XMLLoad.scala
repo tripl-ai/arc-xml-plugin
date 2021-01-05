@@ -32,16 +32,15 @@ class XMLLoad extends PipelineStagePlugin with JupyterCompleter {
 
   val version = ai.tripl.arc.xml.BuildInfo.version
 
-  val snippet = """{
+  def snippet()(implicit arcContext: ARCContext): String = {
+    s"""{
     |  "type": "XMLLoad",
     |  "name": "XMLLoad",
-    |  "environments": [
-    |    "production",
-    |    "test"
-    |  ],
+    |  "environments": [${arcContext.completionEnvironments.map { env => s""""${env}""""}.mkString(", ")}],
     |  "inputView": "inputView",
     |  "outputURI": "hdfs://*.xml"
     |}""".stripMargin
+  }
 
   val documentationURI = new java.net.URI(s"${baseURI}/load/#xmlload")
 
