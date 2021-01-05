@@ -32,16 +32,15 @@ class XMLExtract extends PipelineStagePlugin with JupyterCompleter {
 
   val version = ai.tripl.arc.xml.BuildInfo.version
 
-  val snippet = """{
+  def snippet()(implicit arcContext: ARCContext): String = {
+    s"""{
     |  "type": "XMLExtract",
     |  "name": "XMLExtract",
-    |  "environments": [
-    |    "production",
-    |    "test"
-    |  ],
+    |  "environments": [${arcContext.completionEnvironments.map { env => s""""${env}""""}.mkString(", ")}],
     |  "inputURI": "hdfs://*.xml",
     |  "outputView": "outputView"
     |}""".stripMargin
+  }
 
   val documentationURI = new java.net.URI(s"${baseURI}/extract/#xmlextract")
 
