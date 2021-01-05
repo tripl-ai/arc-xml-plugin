@@ -89,7 +89,7 @@ class XMLLoadSuite extends FunSuite with BeforeAndAfter {
       )
     )
 
-    val expected = dataset.drop($"nullDatum")
+    val expected = dataset.drop(col("nullDatum"))
       .withColumn("dateDatum", col("dateDatum").cast("string"))
       .withColumn("decimalDatum", col("decimalDatum").cast("double"))
     val actual = spark.read.format("com.databricks.spark.xml").load(targetFile)
