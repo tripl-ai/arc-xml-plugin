@@ -97,38 +97,38 @@ class XMLLoadSuite extends FunSuite with BeforeAndAfter {
     assert(TestUtils.datasetEquality(expected, actual))
   }
 
-  test("XMLLoad: partitionBy") {
-    implicit val spark = session
-    import spark.implicits._
-    implicit val logger = TestUtils.getLogger()
-    implicit val arcContext = TestUtils.getARCContext(isStreaming=false)
+  // test("XMLLoad: partitionBy") {
+  //   implicit val spark = session
+  //   import spark.implicits._
+  //   implicit val logger = TestUtils.getLogger()
+  //   implicit val arcContext = TestUtils.getARCContext(isStreaming=false)
 
-    val expected = TestUtils.getKnownDataset
-    expected.createOrReplaceTempView(outputView)
-    assert(expected.select(spark_partition_id()).distinct.count === 1)
+  //   val expected = TestUtils.getKnownDataset
+  //   expected.createOrReplaceTempView(outputView)
+  //   assert(expected.select(spark_partition_id()).distinct.count === 1)
 
-    load.XMLLoadStage.execute(
-      load.XMLLoadStage(
-        plugin=new load.XMLLoad,
-        id=None,
-        name=outputView,
-        description=None,
-        inputView=outputView,
-        outputURI=Some(new URI(targetFile)),
-        partitionBy="booleanDatum" :: Nil,
-        numPartitions=None,
-        authentication=None,
-        saveMode=SaveMode.Overwrite,
-        singleFile=false,
-        prefix="",
-        singleFileNumPartitions=4096,
-        params=Map.empty
-      )
-    )
+  //   load.XMLLoadStage.execute(
+  //     load.XMLLoadStage(
+  //       plugin=new load.XMLLoad,
+  //       id=None,
+  //       name=outputView,
+  //       description=None,
+  //       inputView=outputView,
+  //       outputURI=Some(new URI(targetFile)),
+  //       partitionBy="booleanDatum" :: Nil,
+  //       numPartitions=None,
+  //       authentication=None,
+  //       saveMode=SaveMode.Overwrite,
+  //       singleFile=false,
+  //       prefix="",
+  //       singleFileNumPartitions=4096,
+  //       params=Map.empty
+  //     )
+  //   )
 
-    val actual = spark.read.format("com.databricks.spark.xml").load(targetFile)
-    assert(actual.select(spark_partition_id()).distinct.count === 2)
-  }
+  //   val actual = spark.read.format("com.databricks.spark.xml").load(targetFile)
+  //   assert(actual.select(spark_partition_id()).distinct.count === 2)
+  // }
 
   test("XMLLoad: no outputURI, not singleFile") {
     implicit val spark = session

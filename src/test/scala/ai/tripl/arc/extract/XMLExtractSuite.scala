@@ -258,16 +258,16 @@ class XMLExtractSuite extends FunSuite with BeforeAndAfter {
         |    "type" : "string",
         |    "nullable" : false,
         |    "metadata" : {
-        |      "description" : "An Arc internal field describing where this row was originally sourced from.",
-        |      "internal" : true
+        |      "internal" : true,
+        |      "description" : "An Arc internal field describing where this row was originally sourced from."
         |    }
         |  }, {
         |    "name" : "_index",
         |    "type" : "long",
         |    "nullable" : false,
         |    "metadata" : {
-        |      "description" : "An Arc internal field describing where in _filename this row was originally sourced from.",
-        |      "internal" : true
+        |      "internal" : true,
+        |      "description" : "An Arc internal field describing where in _filename this row was originally sourced from."
         |    }
         |  } ]
         |}""".stripMargin
